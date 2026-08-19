@@ -1,0 +1,120 @@
+import pandas as pd
+print("---THE BANK OF DELHI---")
+print("""      WELCOME
+choose your log in
+    1. staff
+    2. goverment""")
+choice=int(input("enter no"))
+if choice == 1:
+    data=pd.read_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\employee_ids_passwords(2).xlsx")
+    id=input("enter your id").strip()
+    password=input("enter your password").strip()
+    login=data[(data['Employee ID'].astype(str).str.strip() == id) & (data['Password'].astype(str).str.strip() == password)]
+    if not login.empty:
+        while True:
+            print("""      welcome
+what you want to do
+    1.change in data
+    2.search in data
+    3.show full data
+    4.exit""")
+            choice1=int(input("enter your choice"))
+            Cdata=pd.read_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx")
+            if choice1==1:
+                print('what you want to do \n 1.update balance \n 2.change account type \n 3.update mobile number \n 4.change password')
+                upchoice=int(input("enter your choice"))
+                if upchoice==1:
+                    check=Cdata['Account No'].astype(int)==custid
+                    if not check.empty:
+                        print("1.credit/add in account \n2.debit/remove from account")
+                        CorD=int(input("enter your choice"))
+                        if CorD==1:
+                            amount=float(input("enter how much money you want to add"))
+                            Cdata.loc[check,'Balance']+=amount
+                            Cdata.to_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx",index=False)
+                            print("money added successfully")
+                        elif CorD==2 :
+                            amount=float(input("enter how much money you want to withdrawal"))
+                            current_balance=Cdata.loc[check,'Balance'].iloc[0]
+                            if current_balance>=amount:
+                                Cdata.loc[check,'Balance']-=amount
+                                Cdata.to_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx",index=False)
+                                print("money withrawal successfully")
+                            else:
+                                print('insufficent balance')
+                        else:
+                            print("wrong choice")
+                    else:
+                        print("wrong account number")
+            
+                elif upchoice==2:
+                    custid=int(input("enter customers Account No"))
+                    check=Cdata['Account No'].astype(int)==custid
+                    if not check.empty:
+                        typetochange=input("change to which type of account")
+                        Cdata.loc[check,'Account Type']=typetochange
+                        Cdata.to_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx",index=False)
+                        print("change done")
+                    else:
+                        print("wrong account number")
+                elif upchoice==3:
+                    custid=int(input("enter customers Account No"))
+                    check=Cdata['Account No'].astype(int)==custid
+                    if not check.empty:
+                        newmobilenumber=int(input("enter no"))
+                        Cdata.loc[check,'Phone']=newmobilenumber
+                        Cdata.to_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx",index=False)
+                        print("new mobile number updated")
+                    else:
+                        print("wrong account number")
+                elif upchoice==4:
+                    custid=int(input("enter customers Account No"))
+                    check=Cdata['Account No'].astype(int)==custid
+                    if not check.empty:
+                        changepassword=input("enter new password")
+                        Cdata.loc[check,'Password']=changepassword
+                        Cdata.to_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx",index=False)
+                        print("change done")
+                    else:
+                        print("wrong account number")
+                else:
+                    print("wrong choice")
+            elif choice1==2:
+                accountno=int(input('enter account no'))
+                matchh=Cdata['Account No']==accountno
+                if not matchh.empty:
+                    print(Cdata.loc[matchh].to_string(index=False))
+                else:
+                    print("data not found") 
+            elif choice1==3:
+                print(Cdata.loc[0:])
+            elif choice1==4:
+                print('data close')
+                break
+            else:
+                print("wrong choice")
+    else:
+        print("wrong id or password")
+elif choice==2:
+    Cdata=pd.read_excel(r"C:\Users\SHAURYA\OneDrive\Desktop\bank management data\bank_management_1000_customers.xlsx")
+    print("choose what you want to do \n1.search in data \n2 show full data \n3.filtered data")
+    govchoise=int(input("enter your choice"))
+    if govchoise==1:
+        accountnu=int(input("enter account number"))
+        checkk=Cdata['Account No'].astype(int)==accountnu
+        if not checkk.empty:
+            print(Cdata.loc[checkk].to_string(index=False))
+        else:
+            print("wrong account number")
+    elif govchoise==2:
+        print(Cdata.loc[0:])
+    elif govchoise==3:
+        count=0
+        gg=int(input("enter the amount to count how many account more than that much account"))
+        balance=Cdata['Balance']>gg
+        for i in balance:
+            if i==True:
+                count += 1
+        print(count)
+else:
+    print("wrong choice")
